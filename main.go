@@ -1,41 +1,27 @@
 package main
 
 import (
-	"go-api/controller"
 	"go-api/db"
-	"go-api/repository"
-	"go-api/usecase"
+	"go-api/routes"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-
+	// Inicializa o servidor
 	server := gin.Default()
 
-	dbConnection, err := db.ConnecDB()
+	// Conecta ao banco de dados
+	dbConnection, err := db.ConnectDB()
 	if err != nil {
-		panic(err)
+		log.Fatalf("Error connecting to database: %v", err)
 	}
+	defer dbConnection.Close()
 
-	//Camada de repository
-	ProductRepository := repository.NewProductRepository(dbConnection)
+	// Inicializa as rotas
+	routes.InitRouteProduct(server, dbConnection)
 
-	//Camada usecase
-	ProductUseCase := usecase.NewProductUseCase(ProductRepository)
-
-	//Camada de controllers
-	ProductController := controller.NewProductController(ProductUseCase)
-
-	server.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message:": "pong",
-		})
-	})
-
-	server.GET("/products", ProductController.GetProducts)
-	server.GET("/product/:productId", ProductController.GetProductById)
-	server.POST("/product", ProductController.CreateProduct)
-
+	// Inicia o servidor
 	server.Run(":8000")
 }

@@ -10,14 +10,13 @@ type ProductRepository struct {
 	connection *sql.DB
 }
 
-func NewProductRepository(connection *sql.DB) ProductRepository {
-	return ProductRepository{
+func NewProductRepository(connection *sql.DB) *ProductRepository {
+	return &ProductRepository{
 		connection: connection,
 	}
 }
 
 func (pr *ProductRepository) GetProducts() ([]model.Product, error) {
-
 	query := "SELECT id, product_name, price FROM product"
 	rows, err := pr.connection.Query(query)
 
@@ -48,7 +47,6 @@ func (pr *ProductRepository) GetProducts() ([]model.Product, error) {
 }
 
 func (pr *ProductRepository) GetProductById(id int) (*model.Product, error) {
-
 	query, err := pr.connection.Prepare("SELECT id, product_name, price FROM product WHERE id = $1")
 
 	if err != nil {
@@ -77,7 +75,6 @@ func (pr *ProductRepository) GetProductById(id int) (*model.Product, error) {
 }
 
 func (pr *ProductRepository) CreateProduct(product model.Product) (int, error) {
-
 	var id int
 
 	query, err := pr.connection.Prepare("INSERT INTO product" +

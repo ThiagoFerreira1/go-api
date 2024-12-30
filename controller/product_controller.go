@@ -10,18 +10,16 @@ import (
 )
 
 type ProductController struct {
-	productUseCase usecase.ProductUseCase
+	useCase *usecase.ProductUseCase
 }
 
-func NewProductController(usecase usecase.ProductUseCase) ProductController {
-	return ProductController{
-		productUseCase: usecase,
-	}
+func NewProductController(useCase *usecase.ProductUseCase) *ProductController {
+	return &ProductController{useCase: useCase}
 }
 
 func (p *ProductController) GetProducts(ctx *gin.Context) {
 
-	products, err := p.productUseCase.GetProducts()
+	products, err := p.useCase.GetProducts()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 	}
@@ -50,7 +48,7 @@ func (p *ProductController) GetProductById(ctx *gin.Context) {
 		return
 	}
 
-	product, err := p.productUseCase.GetProductById(productId)
+	product, err := p.useCase.GetProductById(productId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 	}
@@ -75,7 +73,7 @@ func (p *ProductController) CreateProduct(ctx *gin.Context) {
 		return
 	}
 
-	insertedProduct, err := p.productUseCase.CreateProduct(product)
+	insertedProduct, err := p.useCase.CreateProduct(product)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
