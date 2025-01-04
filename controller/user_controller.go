@@ -25,7 +25,7 @@ func (u *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	insertedUser, err := u.useCase.CreateUse(user)
+	insertedUser, err := u.useCase.CreateUser(user)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)

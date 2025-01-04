@@ -14,5 +14,5 @@ func InitRouteUser(server *gin.Engine, connection *sql.DB) {
 	useCase := usecase.NewUserUseCase(repo)
 	controller := controller.NewUserController(useCase)
 
-	server.POST("/product", controller.CreateUser)
+	server.POST("/user", controller.CreateUser)
 }

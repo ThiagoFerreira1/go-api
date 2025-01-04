@@ -20,15 +20,16 @@ func (pr *UserRepository) CreateUser(user model.User) (int, error) {
 	var id int
 
 	query, err := pr.connection.Prepare("INSERT INTO users" +
-		"(id_user, name, email)" +
-		" VALUES ($1, $2) RETURNING id")
+		"(name, email)" +
+		" VALUES ($1, $2) RETURNING id_user")
 
 	if err != nil {
 		fmt.Println(err)
+		fmt.Print(query)
 		return 0, err
 	}
 
-	err = query.QueryRow(user.ID, user.Name, user.Email).Scan(&id)
+	err = query.QueryRow(user.Name, user.Email).Scan(&id)
 
 	if err != nil {
 		fmt.Println(err)
